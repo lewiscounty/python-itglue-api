@@ -17,14 +17,17 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Internet",
     "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
 ]
 dynamic = ["version", "description"]
-requires-python = "~= 3.5",
+requires-python = "~= 3.5"
 dependencies = [
     "requests ~= 2.27",
 ]
 
 [project.urls] 
 Home = "https://code.lewiscountywa.gov/lewiscounty/python-itglue-api"
+
+[tool.flit.module]
+name = "itglue"
