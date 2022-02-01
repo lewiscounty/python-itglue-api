@@ -1,6 +1,6 @@
 import unittest
 
-from itglue.resources import *
+from itglue.resource import *
 
 class TestResource(unittest.TestCase):
     """Test functionality common to all resources."""
