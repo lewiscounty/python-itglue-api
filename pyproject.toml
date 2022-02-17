@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.urls] 
-Home = "https://code.lewiscountywa.gov/lewiscounty/python-itglue-api"
+Home = "https://github.com/lewiscounty/python-itglue-api"
 
 [tool.flit.module]
 name = "itglue"
