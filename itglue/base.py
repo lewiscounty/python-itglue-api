@@ -96,7 +96,7 @@ class QueryOperation(Operation):
 class ShowOperation(QueryOperation): pass
 
 
-class ResourceBase(type):
+class ResourceMeta(type):
     """Metaclass for all Resource subclasses."""
 
     resource_classes = {}
@@ -104,7 +104,7 @@ class ResourceBase(type):
     def __new__(metaclass, classname, bases, namespace, **kwargs):
         # Only use custom initialization for subclasses of Resource
         # (exclude Resource itself)
-        parents = [b for b in bases if isinstance(b, ResourceBase)]
+        parents = [b for b in bases if isinstance(b, ResourceMeta)]
         if not parents:
             # Run default type() constructor
             return super().__new__(metaclass, classname, bases, namespace, **kwargs)
@@ -132,7 +132,7 @@ class ResourceBase(type):
         return cls.resource_classes[resource_type]
 
 
-class Resource(metaclass=ResourceBase):
+class Resource(metaclass=ResourceMeta):
     """Base class representing an IT Glue resource."""
 
     def __init__(self, id_=None, **kwargs):
