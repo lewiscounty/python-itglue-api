@@ -1,6 +1,6 @@
 import unittest
 
-from itglue.base import Resource
+from itglue.base import Resource, ShowOperation
 from itglue.resource import Configuration
 
 
@@ -114,3 +114,18 @@ class TestResource(unittest.TestCase):
 
         self.assertIs(Resource.lookup_subclass('my_subclass'), Subclass, "Resource.lookup_subclass() didn't return the correct class")
         self.assertIs(Resource.lookup_subclass('configurations'), Configuration, "Resource.lookup_subclass() didn't return the correct class")
+
+    def test_operations_initialized(self):
+        """Test the Meta.operations array initialization."""
+
+        op = ShowOperation()
+        class Subclass1(Resource):
+            class Meta:
+                resource_type = 'subclass1'
+        class Subclass2(Resource):
+            class Meta:
+                resource_type = 'subclass2'
+                operations = [op]
+
+        self.assertEqual(Subclass1.Meta.operations, [], "Resource.Meta.operations is not initialized to [] by default")
+        self.assertEqual(Subclass2.Meta.operations, [op], "Resource.Meta.operations is not initialized with the operations defined")

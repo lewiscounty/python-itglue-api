@@ -2,6 +2,14 @@ from collections.abc import Collection
 from types import SimpleNamespace
 
 
+def _init_nested_meta(meta):
+    """Initialize a Resource's nested Meta class."""
+
+    meta.attributes = AttributeCollection()
+    if not hasattr(meta, 'operations'):
+        meta.operations = []
+
+
 class Attribute:
     """Represents a single IT Glue resource attribute."""
 
@@ -74,33 +82,48 @@ class AttributeCollection(Collection):
         return len(self.__attributes)
 
 
+class Operation:
+    def __init__(self, *, parent_resources):
+        self.parent_resources = parent_resources
+
+
+class QueryOperation(Operation):
+    def __init__(self, *, parent_resources=[], includes=[]):
+        super().__init__(parent_resources=parent_resources)
+        self.includes = includes
+
+
+class ShowOperation(QueryOperation): pass
+
+
 class ResourceBase(type):
     """Metaclass for all Resource subclasses."""
 
     resource_classes = {}
 
-    def __new__(metaclass, classname, bases, namespace_dict, **kwargs):
+    def __new__(metaclass, classname, bases, namespace, **kwargs):
         # Only use custom initialization for subclasses of Resource
         # (exclude Resource itself)
         parents = [b for b in bases if isinstance(b, ResourceBase)]
         if not parents:
             # Run default type() constructor
-            return super().__new__(metaclass, classname, bases, namespace_dict, **kwargs)
+            return super().__new__(metaclass, classname, bases, namespace, **kwargs)
 
-        attrs = {'Meta': namespace_dict.pop('Meta', SimpleNamespace())}
-        attrs['Meta'].attributes = AttributeCollection()
+        meta = namespace.pop('Meta', SimpleNamespace())
+        _init_nested_meta(meta)
+        attrs = {'Meta': meta}
 
-        for (key, val) in namespace_dict.items():
+        for (key, val) in namespace.items():
             if isinstance(val, Attribute):
                 val.set_name(key)
-                attrs['Meta'].attributes.add(val)
+                meta.attributes.add(val)
             else:
                 attrs[key] = val
 
         # Call type() to create the class and then register it
         # in the resource_classes list
         cls = super().__new__(metaclass, classname, bases, attrs, **kwargs)
-        metaclass.resource_classes[attrs['Meta'].resource_type] = cls
+        metaclass.resource_classes[meta.resource_type] = cls
         return cls
 
     def lookup_subclass(cls, resource_type):

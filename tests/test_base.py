@@ -1,6 +1,12 @@
 import unittest
 
-from itglue.base import Attribute, AttributeCollection
+from itglue.base import (
+    Attribute,
+    AttributeCollection,
+    QueryOperation,
+)
+from itglue.resource import Configuration
+
 
 class TestAttribute(unittest.TestCase):
     """Test the Attribute class."""
@@ -130,3 +136,25 @@ class TestAttributeCollection(unittest.TestCase):
         self.assertIn('b_attr', c, "membership test with str name returned false negative")
         self.assertNotIn(Attribute(), c, "membership test with Attribute() instance returned false positive")
         self.assertNotIn('definitely missing', c, "membership test with str name returned false positive")
+
+
+class TestQueryOperation(unittest.TestCase):
+    """Test the QueryOperation class."""
+
+    def test_default_constructor(self):
+        """Test the QueryOperation() constructor with default args."""
+
+        e = QueryOperation()
+
+        self.assertEqual(e.parent_resources, [], "QueryOperation.parent_resources not initialized to [] with default args")
+        self.assertEqual(e.includes, [], "QueryOperation.includes not initialized to [] with default args")
+
+    def test_custom_args(self):
+        """Test the QueryOperation() constructor with custom kwargs."""
+
+        parent_resources = [Configuration]
+        includes = ['adapters_resources', 'tickets']
+        e = QueryOperation(parent_resources=parent_resources, includes=includes)
+
+        self.assertEqual(e.parent_resources, parent_resources, "QueryOperation.parent_resources not initialized correctly")
+        self.assertEqual(e.includes, includes, "QueryOperation.includes not initialized correctly")
