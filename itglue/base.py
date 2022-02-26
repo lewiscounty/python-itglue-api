@@ -13,20 +13,22 @@ def _init_nested_meta(meta):
 class Attribute:
     """Represents a single IT Glue resource attribute."""
 
-    def __init__(self, network_key=None):
+    def __init__(self, *, name=None, network_key=None):
         """
-        Initialize an Attribute instance with optional custom network_key.
+        Initialize an Attribute instance.
 
         When Attribute instances are assigned to attributes of Resource
         subclasses, Attribute.set_name() will be called automatically with
         the name of the attribute that the instance was assigned to.
-
-        If network_key is omitted, set_name() will also initialize network_key
-        to be the same as the name except with underscores replaced with hyphens.
+        The name can also be set by calling set_name(), or via the constructor
+        with Attribute(name='value').
         """
 
-        self.name = None
         self.network_key = network_key
+        if name is None:
+            self.name = None
+        else:
+            self.set_name(name)
 
     def set_name(self, name):
         """
@@ -80,20 +82,6 @@ class AttributeCollection(Collection):
 
     def __len__(self):
         return len(self.__attributes)
-
-
-class Operation:
-    def __init__(self, *, parent_resources):
-        self.parent_resources = parent_resources
-
-
-class QueryOperation(Operation):
-    def __init__(self, *, parent_resources=[], includes=[]):
-        super().__init__(parent_resources=parent_resources)
-        self.includes = includes
-
-
-class ShowOperation(QueryOperation): pass
 
 
 class ResourceMeta(type):
