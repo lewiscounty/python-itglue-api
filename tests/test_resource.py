@@ -83,27 +83,29 @@ class TestResource(unittest.TestCase):
         with self.assertRaises(TypeError, msg="no exception raised on invalid constructor args"):
             Configuration('987', name="My config", invalid_arg="spam")
 
-    def test_create_resource_from_network_dict(self):
-        """Test creating a resource from a raw network dict."""
+    def test_create_single_resource_from_network_dict(self):
+        """Test creating a single resource from a raw network dict."""
 
         d = {
-            'id': '999',
-            'type': 'configurations',
-            'attributes': {
-                'name': 'my config',
-                'primary-ip': '10.0.0.2',
-                'unknown-attr': 'eggs',
+            'data': {
+                'id': '999',
+                'type': 'configurations',
+                'attributes': {
+                    'name': 'my config',
+                    'primary-ip': '10.0.0.2',
+                    'unknown-attr': 'eggs',
+                },
             },
         }
 
         c = Resource.from_network_dict(d)
 
         self.assertIsInstance(c, Configuration, "Resource constructed from network dict is not an instance of the appropriate subclass")
-        self.assertEqual(c.id, d['id'], "id attribute not initialized from network dict")
-        self.assertEqual(c.name, d['attributes']['name'], "name attribute not initialized from network dict")
-        self.assertEqual(c.primary_ip, d['attributes']['primary-ip'], "primary_ip attribute not initialized from network dict")
+        self.assertEqual(c.id, d['data']['id'], "id attribute not initialized from network dict")
+        self.assertEqual(c.name, d['data']['attributes']['name'], "name attribute not initialized from network dict")
+        self.assertEqual(c.primary_ip, d['data']['attributes']['primary-ip'], "primary_ip attribute not initialized from network dict")
         self.assertFalse(hasattr(c, 'unknown_attr'), "unknown attribute is defined on resource")
-        self.assertEqual(c.Meta.network_dict, d, "Resource.Meta.network_dict is not initialized")
+        self.assertEqual(c.Meta.raw_data, d['data'], "Resource.Meta.raw_data is not initialized")
 
     def test_subclass_lookup(self):
         """Test finding a subclass by its Meta.resource_type value."""

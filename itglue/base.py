@@ -147,19 +147,21 @@ class Resource(metaclass=ResourceMeta):
         Create a Resource instance from a network dict parsed from a raw
         IT Glue API JSON response.
 
-        The network_dict must have a 'type' key that matches a Resource subclass's
-        declared resource_type. This value is used to ensure that the resulting Resource
-        instance is an instance of the correct Resource subclass.
+        The network_dict must have a 'data' key that is a nested dict representing the resource.
+        The nested dict must have a 'type' key that matches a Resource subclass's declared
+        resource_type. This value is used to ensure that the resulting Resource instance is an instance
+        of the correct Resource subclass.
         """
 
-        cls = Resource.resource_classes[network_dict['type']]
-        kwargs = {'id_': network_dict['id']}
+        data = network_dict['data']
+        cls = Resource.resource_classes[data['type']]
+        kwargs = {'id_': data['id']}
 
-        for (key, val) in network_dict['attributes'].items():
+        for (key, val) in data['attributes'].items():
             attr = cls.Meta.attributes.get_by_network_key(key)
             if attr:
                 kwargs[attr.name] = val
 
         resource = cls(**kwargs)
-        resource.Meta.network_dict = network_dict
+        resource.Meta.raw_data = data
         return resource
