@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "itglue-api"
 authors = [{name = "David Haymond", email = "david.haymond@lewiscountywa.gov"}]
-readme = "README.md"
+readme = "README.rst"
 license = {file = "LICENSE"}
 classifiers = [
     "Development Status :: 1 - Planning",
