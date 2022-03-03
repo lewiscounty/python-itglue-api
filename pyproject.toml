@@ -26,6 +26,11 @@ dependencies = [
     "requests ~= 2.27",
 ]
 
+[project.optional-dependencies]
+test = [
+    "coverage ~= 6.3",
+]
+
 [project.urls] 
 Home = "https://github.com/lewiscounty/python-itglue-api"
 
