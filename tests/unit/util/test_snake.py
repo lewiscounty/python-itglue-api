@@ -1,6 +1,6 @@
-from itglue.util import kebab_to_snake
-
 from unittest import TestCase
+
+from itglue.util import kebab_to_snake
 
 
 class TestSnake(TestCase):

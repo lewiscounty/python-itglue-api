@@ -27,12 +27,24 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = [
-    "coverage ~= 6.3",
+dev = [
+    "coverage[toml]",
+    "mypy",
+    "nox",
+    "pre-commit",
 ]
 
 [project.urls] 
 Home = "https://github.com/lewiscounty/python-itglue-api"
 
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+fail_under = 100
+
 [tool.flit.module]
 name = "itglue"
+
+[tool.isort]
+profile = "black"
