@@ -9,7 +9,7 @@ lint:
 	pre-commit run --all-files
 
 test:
-	nox --sessions test
+	nox
 
 test-ci:
 	mypy --strict -p itglue
