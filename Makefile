@@ -1,4 +1,4 @@
-.PHONY: deps lint test test-ci venv
+.PHONY: deps lint test test-full venv
 
 deps:
 	pip install --upgrade pip
@@ -9,12 +9,12 @@ lint:
 	pre-commit run --all-files
 
 test:
-	nox
-
-test-ci:
 	mypy --strict -p itglue
 	coverage run -m unittest discover
 	coverage report -m
+
+test-full:
+	nox
 
 venv:
 	rm -rf .venv

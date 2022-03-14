@@ -21,7 +21,7 @@ jobs:
           pip install --upgrade pip
           pip install .[dev]
       - name: Run tests
-        run: make test-ci
+        run: make test
   test-multi-python:
     name: Test on Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -40,4 +40,4 @@ jobs:
           pip install --upgrade pip
           pip install .[dev]
       - name: Run tests
-        run: make test-ci
+        run: make test
